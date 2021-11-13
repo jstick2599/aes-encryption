@@ -1,16 +1,6 @@
 #include <iostream>
 #include <vector>
 using namespace std; 
-//Implement the encryption algorithm of the Advanced Encryption System (AES) for 16 byte key(128 bit) key and thoroughly test it for correctness. Your code should be well-structured and well-documented. Assume that the plaintext input message is always of length 128 bits.
-//AES section is in chapter 6
-//You will need to submit the following:
-//1.Complete source code of your program.
-//2.A 2-4 page write up explaining your code design and implementation.
-//discuss implementation(problems i encountered, how much time I spent, interesting things i found, assess quality of my code, provide examples of input output pair after each round like book)
-//attach pdf and cpp file
-//3.Two test cases (and the corresponding outputs) that you used to test your code.
-//due 11/19 at 11:59 pm
-
 vector<vector<int>> byteSub(vector<vector<int>>sub){
      int s[256] =  
  {0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76
