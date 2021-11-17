@@ -1,6 +1,4 @@
-#include <iostream>
-#include <vector>
-using namespace std; 
+
 vector<vector<int>> byteSub(vector<vector<int>>sub){
      int s[256] =  
  {0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76
@@ -160,21 +158,7 @@ vector<vector<int>> shiftRow(vector<vector<int>>message){
     }
     return shifted; 
 }
-
-vector<vector<int>> addRoundKey(vector<vector<int>>message, vector<vector<int>>key){
-    vector<vector<int>>state; 
-    state.resize(4); 
-    for(int i=0; i<4; i++){ 
-     state[i].resize(4); 
-    }
-    for(int i=0; i<4; i++){
-        for(int j=0; j<4; j++){
-               state[i][j]=message[i][j]^key[i][j];//XORs message with key to create new state(message) array
-        }
-     }
-    return state; 
-}
-vector<vector<int>> addRoundKeys(vector<vector<int>>message, vector<vector<int>>key, int k){
+vector<vector<int>> addRoundKey(vector<vector<int>>message, vector<vector<int>>key, int k){
     vector<vector<int>>state; 
     state.resize(4); 
     for(int i=0; i<4; i++){ 
@@ -206,6 +190,7 @@ void populateKeyMatrix(vector<vector<int>>&mass, vector<vector<int>> key, int l)
     for(int i=x; i<x+4; i++){ 
         for(int j=0; j<4; j++){
             mass[i][j]=temp[j+x][i-x];
+            //must make indexes use x because key index 0 is actually x=l*4. [8][0]=[x][0] so [0][8]=[0][8-8] which basically makes it zero index
         }
     }
 
@@ -343,19 +328,19 @@ int main(){
     populateMatrix(biteKey, key);//populate key into 2d vector
     keyExpansion(biteKey, temp);//expands original key to now be 11 keys
     populateInitialMatrix(biteKey, key);//makes key matrix col x row instead of row x col (transposed)
-    bite=addRoundKey(bite, biteKey);
+    bite=addRoundKey(bite, biteKey, 0);
 
     for(int i=0; i<9; i++){//i:0-9
         bite=byteSub(bite);
         bite=shiftRow(bite); 
         bite=mixColumns(bite);
         populateKeyMatrix(biteKey, temp, i+1);//populates bitekey with the correctly expanded matrix with it transposed
-        bite=addRoundKeys(bite, biteKey, i+1);//adds roundkey each time
+        bite=addRoundKey(bite, biteKey, i+1);//adds roundkey each time
     }
     bite=byteSub(bite);
     bite=shiftRow(bite);
     populateKeyMatrix(biteKey, temp, 10);
-    bite=addRoundKeys(bite, biteKey, 10);
+    bite=addRoundKey(bite, biteKey, 10);
     //lines 365-368 is the last round of aes encryption which includes everything but mix columns
        for(int i=0; i<4; i++){
             for(int j=0; j<4; j++){
